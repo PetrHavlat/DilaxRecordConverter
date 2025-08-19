@@ -1,10 +1,12 @@
 # DilaxRecordConverter
 
-Converts data from senzors of this company. To CSV files. In future to PDF and other formats.
+Converts data from senzors of this company:
 
 https://www.dilax.com/en
 
 **They are great. I really want to work for them.** 
+
+It reads .raw files and convert them to CSV files. In future to PDF and other formats.
 
 I love robotics. And all that is associated with it. 
 Do not ask me how I get specification for DLX3 senzors. **I will not tell.**
