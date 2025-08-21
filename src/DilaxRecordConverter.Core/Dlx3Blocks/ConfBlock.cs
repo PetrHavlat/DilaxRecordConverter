@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
 
 namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 {
@@ -41,12 +42,8 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					CurrentTime = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(CurrentTime).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(CurrentTime).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+					CurrentTime = BinaryHelper.ReadUIntValue(reader, true);
+					
 					// Načítání opakujících se záznamů dveří
 					while (ms.Position < ms.Length)
 					{
@@ -61,33 +58,33 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 
 							var door = new DoorConfiguration
 							{
-								DeviceId = Dlx3Pomocnik.CtiUIntBigEndian(reader),
-								Instance = reader.ReadByte()
+								DeviceId = BinaryHelper.ReadUIntValue(reader, true),
+								Instance = BinaryHelper.ReadByteValue(reader)
 							};
 
 							// Čtení řetězců s kontrolou dostupnosti dat
 							if (ms.Position < ms.Length)
-								door.DeviceModel = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+								door.DeviceModel = BinaryHelper.ReadStringValue(reader);
 							else
 								break;
 
 							if (ms.Position < ms.Length)
-								door.DoorName = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+								door.DoorName = BinaryHelper.ReadStringValue(reader);
 							else
 								break;
 
 							if (ms.Position < ms.Length)
-								door.VehicleId = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+								door.VehicleId = BinaryHelper.ReadStringValue(reader);
 							else
 								break;
 
 							if (ms.Position < ms.Length)
-								door.VehicleType = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+								door.VehicleType = BinaryHelper.ReadStringValue(reader);
 							else
 								break;
 
 							if (ms.Position < ms.Length)
-								door.Operator = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+								door.Operator = BinaryHelper.ReadStringValue(reader);
 							else
 								break;
 
