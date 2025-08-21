@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,21 +50,17 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					{
 						var message = new DiagnosticMessage
 						{
-							Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							ModuleId = reader.ReadByte(),
-							SubModuleId = reader.ReadByte(),
-							MessageId = reader.ReadByte(),
-							Category = reader.ReadByte()
+							Timestamp = BinaryHelper.ReadUIntValue(reader, true),
+							ModuleId = BinaryHelper.ReadByteValue(reader),
+							SubModuleId = BinaryHelper.ReadByteValue(reader),
+							MessageId = BinaryHelper.ReadByteValue(reader),
+							Category = BinaryHelper.ReadByteValue(reader)
 						};
-						//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(message.Timestamp).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-						//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(message.Timestamp).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+						
 						// Čtení zprávy, pokud máme dostatek dat
 						if (ms.Position < ms.Length)
 						{
-							message.Message = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+							message.Message = BinaryHelper.ReadStringValue(reader);
 
 							// Parsování informací o zařízení pro Module ID 20
 							if (message.HasDeviceInfo)
