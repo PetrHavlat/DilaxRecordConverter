@@ -26,153 +26,158 @@ namespace DilaxRecordConverter.Core.Helpers
 
 	public static class BinaryHelper
 	{
-		private static T ReadValue<T>(BinaryReader reader, Func<BinaryReader, T> readFunc, int sizeInBytes, string typeName)
+		private static byte[] ReadBinaryData(BinaryReader reader, int sizeInBytes, string typeName, bool isInBigEndian = false)
 		{
 			try
 			{
 				var availableBytes = reader.BaseStream.Length - reader.BaseStream.Position;
-				
+
 				if (availableBytes < sizeInBytes)
 				{
 					throw new EndOfStreamException($"Nedostatek dat pro načtení {sizeInBytes} bajtu pro {typeName} hodnotu. Dostupné: {availableBytes} bajtů.");
 				}
 
-				return readFunc(reader);
+				var bytes = reader.ReadBytes(sizeInBytes);
+
+				if (isInBigEndian) Array.Reverse(bytes);
+
+				return bytes;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při čtení {typeName}: {ex.Message}");
+				Console.WriteLine($"Chyba při čtení: {ex.Message}");
 				throw; // zachovává stack trace
 			}
 		}
 
-		public static bool ReadBoolValue(BinaryReader reader)
+		public static bool ReadBoolValue(BinaryReader reader) 
 		{
-			return ReadValue(reader, r => r.ReadBoolean(), sizeof(bool), nameof(Boolean));
+			try
+			{
+				var availableBytes = reader.BaseStream.Length - reader.BaseStream.Position;
+
+				if (availableBytes < sizeof(Boolean))
+				{
+					throw new EndOfStreamException($"Nedostatek dat pro načtení {sizeof(Boolean)} bajtu pro {nameof(Boolean)} hodnotu. Dostupné: {availableBytes} bajtů.");
+				}
+
+				return reader.ReadBoolean();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Chyba při čtení: {ex.Message}");
+				throw; // zachovává stack trace
+			}
 		}
 
 		public static byte ReadByteValue(BinaryReader reader)
 		{
-			return ReadValue(reader, r => r.ReadByte(), sizeof(byte), nameof(Byte));
-		}
+			try
+			{
+				var availableBytes = reader.BaseStream.Length - reader.BaseStream.Position;
 
+				if (availableBytes < sizeof(Byte))
+				{
+					throw new EndOfStreamException($"Nedostatek dat pro načtení {sizeof(Byte)} bajtu pro {nameof(Byte)} hodnotu. Dostupné: {availableBytes} bajtů.");
+				}
+
+				return reader.ReadByte();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Chyba při čtení: {ex.Message}");
+				throw; // zachovává stack trace
+			}
+		}
+		
 		public static sbyte ReadSByteValue(BinaryReader reader)
 		{
-
-			return ReadValue(reader, r => r.ReadSByte(), sizeof(sbyte), nameof(SByte));
-		}
-
-		public static short ReadShortValue(BinaryReader reader)
-		{
-			return ReadValue(reader, r => r.ReadInt16(), sizeof(short), nameof(Int16));
-		}
-
-		public static ushort ReadUShortValue(BinaryReader reader)
-		{
-			return ReadValue(reader, r => r.ReadUInt16(), sizeof(ushort), nameof(UInt16));
-		}
-
-		public static int ReadIntValue(BinaryReader reader)
-		{
-			return ReadValue(reader, r => r.ReadInt32, sizeof(int), nameof(Int32));
-		}
-
-		public static ushort ReadUIntValue(BinaryReader reader)
-		{
-			return ReadValue(reader, r => r.ReadUInt16(), sizeof(ushort), nameof(UInt16));
-		}
-
-		public static uint ReadUIntBigEndianValue(BinaryReader reader)
-		{
-			var byteCount = 4;
-			
 			try
 			{
-				// Kontrola, zda je k dispozici dostatek dat
-				if (reader.BaseStream.Length - reader.BaseStream.Position < byteCount)
+				var availableBytes = reader.BaseStream.Length - reader.BaseStream.Position;
+
+				if (availableBytes < sizeof(SByte))
 				{
-					throw new EndOfStreamException($"Nedostatek dat pro čtení {byteCount} bajtů pro ushort.");
+					throw new EndOfStreamException($"Nedostatek dat pro načtení {sizeof(SByte)} bajtu pro {nameof(SByte)} hodnotu. Dostupné: {availableBytes} bajtů.");
 				}
 
-				var bytes = reader.ReadBytes(byteCount);
-				Array.Reverse(bytes);
-				return BitConverter.ToUInt32(bytes, 0);
+				return reader.ReadSByte();
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při čtení ushort: {ex.Message}");
-				throw ex;
+				Console.WriteLine($"Chyba při čtení: {ex.Message}");
+				throw; // zachovává stack trace
 			}
 		}
 
-		public static uint ReadUIntSmallEndianValue(BinaryReader reader)
+		public static char ReadCharValue(BinaryReader reader)
 		{
-			var byteCount = 4;
-			
 			try
 			{
-				// Kontrola, zda je k dispozici dostatek dat
-				if (reader.BaseStream.Length - reader.BaseStream.Position < byteCount)
+				var availableBytes = reader.BaseStream.Length - reader.BaseStream.Position;
+
+				if (availableBytes < sizeof(Char))
 				{
-					throw new EndOfStreamException("Nedostatek dat pro čtení 2 bajtů pro ushort.");
+					throw new EndOfStreamException($"Nedostatek dat pro načtení {sizeof(Char)} bajtu pro {nameof(Char)} hodnotu. Dostupné: {availableBytes} bajtů.");
 				}
 
-				var bytes = reader.ReadBytes(byteCount);
-
-				return BitConverter.ToUInt32(bytes, 0);
+				return reader.ReadChar();
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Chyba při čtení ushort: {ex.Message}");
-				throw ex;
+				Console.WriteLine($"Chyba při čtení: {ex.Message}");
+				throw; // zachovává stack trace
 			}
 		}
 
-		public static int ReadIntBigEndianValue(BinaryReader reader)
+		public static short ReadShortValue(BinaryReader reader, bool isInBigEndian = false)
 		{
-			var byteCount = 4;
-			
-			try
-			{
-				// Kontrola, zda je k dispozici dostatek dat
-				if (reader.BaseStream.Length - reader.BaseStream.Position < byteCount)
-				{
-					throw new EndOfStreamException($"Nedostatek dat pro čtení {byteCount} bajtů.");
-				}
-
-				var bytes = reader.ReadBytes(byteCount);
-				Array.Reverse(bytes);
-				return BitConverter.ToInt32(bytes, 0);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Chyba při čtení ushort: {ex.Message}");
-				throw ex;
-			}
+			var bytes = ReadBinaryData(reader, sizeof(Int16), nameof(Int16), isInBigEndian);
+			return BitConverter.ToInt16(bytes, 0);
 		}
 
-		public static int ReadIntSmallEndianValue(BinaryReader reader)
+		public static ushort ReadUShortValue(BinaryReader reader, bool isInBigEndian = false)
 		{
-			var byteCount = 4;
-			
-			try
-			{
-				// Kontrola, zda je k dispozici dostatek dat
-				if (reader.BaseStream.Length - reader.BaseStream.Position < byteCount)
-				{
-					throw new EndOfStreamException("Nedostatek dat pro čtení 2 bajtů pro ushort.");
-				}
-
-				var bytes = reader.ReadBytes(byteCount);
-
-				return BitConverter.ToInt32(bytes, 0);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Chyba při čtení ushort: {ex.Message}");
-				throw ex;
-			}
+			var bytes = ReadBinaryData(reader, sizeof(UInt16), nameof(UInt16), isInBigEndian);
+			return BitConverter.ToUInt16(bytes, 0);
 		}
-	}
-	
+
+		public static int ReadIntValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(Int32), nameof(Int32), isInBigEndian);
+			return BitConverter.ToInt32(bytes, 0);
+		}
+
+		public static uint ReadUIntValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(UInt32), nameof(UInt32), isInBigEndian);
+			return BitConverter.ToUInt32(bytes, 0);
+		}
+
+		public static long ReadLongValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(Int64), nameof(Int64), isInBigEndian);
+			return BitConverter.ToInt64(bytes, 0);
+		}
+
+		public static ulong ReadULongValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(UInt64), nameof(UInt64), isInBigEndian);
+			return BitConverter.ToUInt64(bytes, 0);
+		}
+
+		public static float ReadFloatValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(float), nameof(Single), isInBigEndian);
+			return BitConverter.ToSingle(bytes, 0);
+		}
+
+		public static double ReadDoubleValue(BinaryReader reader, bool isInBigEndian = false)
+		{
+			var bytes = ReadBinaryData(reader, sizeof(double), nameof(Double), isInBigEndian);
+			return BitConverter.ToDouble(bytes, 0);
+		}
+
+		
+	}	
 }
