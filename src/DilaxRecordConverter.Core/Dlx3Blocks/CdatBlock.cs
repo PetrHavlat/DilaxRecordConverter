@@ -16,19 +16,6 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		// Kolekce dat pro jednotlivé dveře
 		public List<DoorData> Doors { get; } = new List<DoorData>();
 
-
-		//private Dictionary<string, short> _counts = new Dictionary<string, short>();
-
-		//// Změna: Vrací kopii slovníku, aby se předešlo modifikaci
-		//public Dictionary<string, short> Counts => new Dictionary<string, short>(_counts);
-
-
-		// Přidání metody pro získání počtu pro konkrétní dveře
-		//public short GetCount(string doorName)
-		//{
-		//	return _counts.TryGetValue(doorName, out short count) ? count : (short)0;
-		//}
-
 		public override void ParseData(byte[] data)
 		{
 			try
@@ -36,8 +23,6 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					//_counts.Clear(); // Vyčistíme slovník před novým parsováním
-
 					// Kontrola minimální délky dat (timestamp + exchange time)
 					if (ms.Length < 6)
 					{
@@ -46,13 +31,9 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					}
 
 					// Čtení základních údajů
-					Timestamp = BinaryHelper.ReadUIntBigEndianValue(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
-					PassengerExchangeTime = BinaryHelper.ReadUShortBigEndianValue(reader);
+					Timestamp = BinaryHelper.ReadUIntValue(reader, true);
+					
+					PassengerExchangeTime = BinaryHelper.ReadUShortValue(reader, true);
 
 					// Validace délky bloku
 					int remainingBytes = (int)(ms.Length - ms.Position);
@@ -66,22 +47,12 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					{
 						var doorData = new DoorData
 						{
-							DeviceId = Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							Instance = reader.ReadByte(),
-							BoardingPassengers = (short)Dlx3Pomocnik.CtiUShortBigEndian(reader),
-							AlightingPassengers = (short)Dlx3Pomocnik.CtiUShortBigEndian(reader),
-							UncertainPassengers = (short)Dlx3Pomocnik.CtiUShortBigEndian(reader)
+							DeviceId = BinaryHelper.ReadUIntValue(reader, true),
+							Instance = BinaryHelper.ReadByteValue(reader),
+							BoardingPassengers = BinaryHelper.ReadShortValue(reader, true),
+							AlightingPassengers = BinaryHelper.ReadShortValue(reader, true),
+							UncertainPassengers = BinaryHelper.ReadShortValue(reader, true)
 						};
-
-						//// --- změnit
-						//if (_counts.ContainsKey(doorData.))
-						//{
-						//	_counts[doorData.Instance] += doorData.BoardingPassengers;
-						//}
-						//else
-						//{
-						//	_counts[doorData.Instance] = doorData.BoardingPassengers;
-						//}
 
 						Doors.Add(doorData);
 					}
