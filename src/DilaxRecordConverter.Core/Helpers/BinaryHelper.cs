@@ -178,6 +178,36 @@ namespace DilaxRecordConverter.Core.Helpers
 			return BitConverter.ToDouble(bytes, 0);
 		}
 
-		
+		public static string ReadStringValue(BinaryReader reader)
+		{
+			// Budu pravděpodobně modifikovat
+
+			try
+			{
+				List<byte> bytes = new List<byte>();
+				byte b;
+
+				// Kontrola, zda je k dispozici alespoň jeden bajt
+				while (reader.BaseStream.Position < reader.BaseStream.Length &&
+					  (b = reader.ReadByte()) != 0)
+				{
+					bytes.Add(b);
+
+					// Bezpečnostní pojistka proti nekonečnému cyklu
+					if (bytes.Count > 1000)
+					{
+						Console.WriteLine("Varování: Příliš dlouhý řetězec bez ukončovacího znaku.");
+						break;
+					}
+				}
+
+				return Encoding.GetEncoding("ISO-8859-1").GetString(bytes.ToArray());
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Varování při čtení null-terminated string: {ex.Message}");
+				return string.Empty;
+			}
+		}
 	}	
 }
