@@ -10,4 +10,6 @@ It reads .raw files and convert them to CSV files. In future to PDF and other fo
 
 I have localized all error messages in czech languange. In future I will localize it in english, deutsch, polski, français and español.
 
+**Tool is still under development!**
+
 
