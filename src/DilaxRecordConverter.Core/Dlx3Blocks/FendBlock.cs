@@ -31,18 +31,18 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// </summary>
 		/// <param name="typeAndData">Kombinace typu bloku a dat pro výpočet CRC.</param>
 		/// <returns>True, pokud CRC odpovídá, jinak false.</returns>
-		public override bool ValidateCrc(byte[] typeAndData)
-		{
-			// Pro FEND blok by typeAndData mělo obsahovat pouze typ bloku (4 bajty "FEND")
-			// a žádná data, takže by mělo mít délku přesně 4 bajty
-			if (typeAndData.Length != 4)
-			{
-				Console.WriteLine($"Varování: Neočekávaná délka dat pro CRC FEND bloku: {typeAndData.Length} bajtů.");
-			}
+		//public override bool ValidateCrc(byte[] typeAndData)
+		//{
+		//	// Pro FEND blok by typeAndData mělo obsahovat pouze typ bloku (4 bajty "FEND")
+		//	// a žádná data, takže by mělo mít délku přesně 4 bajty
+		//	if (typeAndData.Length != 4)
+		//	{
+		//		Console.WriteLine($"Varování: Neočekávaná délka dat pro CRC FEND bloku: {typeAndData.Length} bajtů.");
+		//	}
 
-			// Použijeme standardní implementaci z nadřazené třídy
-			return base.ValidateCrc(typeAndData);
-		}
+		//	// Použijeme standardní implementaci z nadřazené třídy
+		//	return base.ValidateCrc(typeAndData);
+		//}
 
 		/// <summary>
 		/// Vrací řetězcovou reprezentaci FEND bloku.
