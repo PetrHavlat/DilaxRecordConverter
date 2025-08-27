@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,17 +58,9 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					PowerOffTimestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					PowerOnTimestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(PowerOffTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(PowerOffTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(PowerOnTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(PowerOnTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+					PowerOffTimestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					PowerOnTimestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					
 					// Kontrola, zda jsme přečetli všechna data
 					if (ms.Position < ms.Length)
 					{
