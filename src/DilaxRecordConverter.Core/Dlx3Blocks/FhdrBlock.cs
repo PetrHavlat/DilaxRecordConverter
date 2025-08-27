@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -114,22 +116,18 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					{
 						Console.WriteLine($"Varování: Neočekávaná revize formátu souboru: {FileRevision}, očekáváno: {ExpectedFileRevision}");
 					}
-					CreationTime		= Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(CreationTime).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(CreationTime).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-					PreviousFileTime	= Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					GeodeticSystem		= reader.ReadByte();
+					CreationTime		= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					PreviousFileTime	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					GeodeticSystem		= BinaryHelper.ReadByteValue(reader);
 					if (GeodeticSystem != ExpectedGeodeticSystem)
 					{
 						Console.WriteLine($"Varování: Neočekávaný geodetický systém: {GeodeticSystem}, očekáváno: {ExpectedGeodeticSystem}");
 					}
-					TimeZone			= Dlx3Pomocnik.ReadNullTerminatedString(reader);
-					DeviceModel			= Dlx3Pomocnik.ReadNullTerminatedString(reader);
-					DeviceSerial		= Dlx3Pomocnik.ReadNullTerminatedString(reader);
-					Operator			= Dlx3Pomocnik.ReadNullTerminatedString(reader);
-					VehicleId			= Dlx3Pomocnik.ReadNullTerminatedString(reader);
+					TimeZone			= BinaryHelper.ReadStringValue(reader);
+					DeviceModel			= BinaryHelper.ReadStringValue(reader);
+					DeviceSerial		= BinaryHelper.ReadStringValue(reader);
+					Operator			= BinaryHelper.ReadStringValue(reader);
+					VehicleId			= BinaryHelper.ReadStringValue(reader);
 				}
 			}
 			catch (Exception ex)
