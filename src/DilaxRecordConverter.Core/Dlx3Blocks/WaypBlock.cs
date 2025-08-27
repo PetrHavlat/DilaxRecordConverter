@@ -1,4 +1,6 @@
-﻿using DLX3Converter.Pomocnici;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using DLX3Converter.Pomocnici;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -141,61 +143,53 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					//// Kontrola, zda máme dostatek dat pro původní formát
-					//if (data.Length >= 16)
-					//{
-					//	// Pokusíme se nejprve načíst data podle původní implementace
-					//	uint timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//	int latitude = BinarniPomocnik.CtiIntSmallEndianHodnotu(reader);
-					//	int longitude = BinarniPomocnik.CtiIntBigEndianHodnotu(reader);
-					//	short speed = (short)Dlx3Pomocnik.CtiUShortBigEndian(reader);
-					//	short course = (short)Dlx3Pomocnik.CtiUShortBigEndian(reader);
+					// Kontrola, zda máme dostatek dat pro původní formát
+					if (data.Length >= 16)
+					{
+						// Pokusíme se nejprve načíst data podle původní implementace
+						uint timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+						int latitude = BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+						int longitude = BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+						short speed = BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+						short course = BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
 
-					//	// Uložíme načtená data
-					//	ArrivalTimestamp = timestamp;
-					//	DepartureTimestamp = timestamp; // Nemáme k dispozici, použijeme stejnou hodnotu
-					//	Type = WaypointType.VehiclePassed; // Nemáme k dispozici, použijeme výchozí hodnotu
+						// Uložíme načtená data
+						ArrivalTimestamp = timestamp;
+						DepartureTimestamp = timestamp; // Nemáme k dispozici, použijeme stejnou hodnotu
+						Type = WaypointType.VehiclePassed; // Nemáme k dispozici, použijeme výchozí hodnotu
 
-					//	// Převod z 1e-6 stupňů na 0.0001 minuty
-					//	Latitude = (int)(latitude / 1_000_000m * 60m * 10000m);
-					//	Longitude = (int)(longitude / 1_000_000m * 60m * 10000m);
+						// Převod z 1e-6 stupňů na 0.0001 minuty
+						Latitude = (int)(latitude / 1_000_000m * 60m * 10000m);
+						Longitude = (int)(longitude / 1_000_000m * 60m * 10000m);
 
-					//	// Převod z cm/s na 0.1 km/h
-					//	Speed = (short)(speed / 100m * 3.6m * 10m);
+						// Převod z cm/s na 0.1 km/h
+						Speed = (short)(speed / 100m * 3.6m * 10m);
 
-					//	Satellites = 0; // Nemáme k dispozici
-					//	TravelledDistance = 0; // Nemáme k dispozici
-					//	StopIdentifier = string.Empty; // Nemáme k dispozici
+						Satellites = 0; // Nemáme k dispozici
+						TravelledDistance = 0; // Nemáme k dispozici
+						StopIdentifier = string.Empty; // Nemáme k dispozici
 
-					//	// Uložíme původní hodnoty pro zpětnou kompatibilitu
-					//	Course = course;
+						// Uložíme původní hodnoty pro zpětnou kompatibilitu
+						Course = course;
 
-					//	Console.WriteLine("Informace: Načtena původní verze WAYP bloku.");
-					//	return;
-					//}
+						Console.WriteLine("Informace: Načtena původní verze WAYP bloku.");
+						return;
+					}
 
 					// Načtení dat podle specifikace
-					DepartureTimestamp	= Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(DepartureTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(DepartureTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-					ArrivalTimestamp	= Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(ArrivalTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(ArrivalTimestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-					Type = (WaypointType)reader.ReadByte();
-					Latitude			= (int)Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					Longitude			= (int)Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					Satellites			= reader.ReadByte();
-					TravelledDistance	= (short)Dlx3Pomocnik.CtiUShortBigEndian(reader);
-					Speed				= (short)Dlx3Pomocnik.CtiUShortBigEndian(reader);
+					DepartureTimestamp	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					ArrivalTimestamp	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Type = (WaypointType)BinaryHelper.ReadByteValue(reader);
+					Latitude			= BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Longitude			= BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Satellites			= BinaryHelper.ReadByteValue(reader);
+					TravelledDistance	= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Speed				= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
 
 					// Načtení identifikátoru zastávky
 					if (ms.Position < ms.Length)
 					{
-						StopIdentifier = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+						StopIdentifier = BinaryHelper.ReadStringValue(reader);
 					}
 					else
 					{
