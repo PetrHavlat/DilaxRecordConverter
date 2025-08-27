@@ -48,14 +48,14 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 			return blok;
 		}
 
-		//public static void PridejBlok(string nazev, Dlx3Block dlx3Blok)
-		//{
-		//	RegistrovaneBloky.Add(nazev, dlx3Blok);
-		//}
+		public static void PridejBlok(string nazev, Dlx3Block dlx3Blok)
+		{
+			RegistrovaneBloky.Add(nazev, dlx3Blok);
+		}
 
-		//public static void OdeberBlok(string nazev)
-		//{
-		//	RegistrovaneBloky.Remove(nazev);
-		//}
+		public static void OdeberBlok(string nazev)
+		{
+			RegistrovaneBloky.Remove(nazev);
+		}
 	}
 }
