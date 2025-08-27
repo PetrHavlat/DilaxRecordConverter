@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -85,11 +87,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
+					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
 
 					// Uložení původních dat pro zpětnou kompatibilitu
 					int dataLen = data.Length - 4;
@@ -111,7 +109,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 						// Načtení zprávy
 						if (ms.Position < ms.Length)
 						{
-							Message = Dlx3Pomocnik.ReadNullTerminatedString(reader);
+							Message = BinaryHelper.ReadStringValue(reader); 
 
 							// Zpracování zprávy podle typu protokolu
 							switch (Type)
