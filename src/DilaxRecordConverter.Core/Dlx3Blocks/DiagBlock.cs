@@ -1,4 +1,5 @@
-﻿using DilaxRecordConverter.Core.Helpers;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,7 +51,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					{
 						var message = new DiagnosticMessage
 						{
-							Timestamp = BinaryHelper.ReadUIntValue(reader, true),
+							Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
 							ModuleId = BinaryHelper.ReadByteValue(reader),
 							SubModuleId = BinaryHelper.ReadByteValue(reader),
 							MessageId = BinaryHelper.ReadByteValue(reader),
