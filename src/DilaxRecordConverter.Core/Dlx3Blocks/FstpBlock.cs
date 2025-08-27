@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,22 +59,18 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					
 					// Načítání informací o dveřích
 					while (ms.Position + 11 <= ms.Length) // Potřebujeme 11 bajtů pro každé dveře (4+1+2+2+2)
 					{
 						var doorCount = new DoorData
 						{
-							DeviceId				= Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							Instance				= reader.ReadByte(),
-							BoardingPassengers		= (short)Dlx3Pomocnik.CtiUShortBigEndian(reader),
-							AlightingPassengers		= (short)Dlx3Pomocnik.CtiUShortBigEndian(reader),
-							UncertainPassengers		= (short)Dlx3Pomocnik.CtiUShortBigEndian(reader)
+							DeviceId				= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							Instance				= BinaryHelper.ReadByteValue(reader),
+							BoardingPassengers		= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							AlightingPassengers		= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							UncertainPassengers		= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN)
 						};
 
 						DoorCounts.Add(doorCount);
