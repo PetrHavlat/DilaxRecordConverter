@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -134,43 +136,21 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN); 
+					
 					// Načítání informací o dveřích
 					while (ms.Position + 17 <= ms.Length) // Potřebujeme 17 bajtů pro každé dveře (4+1+4+4+4)
 					{
 						var doorExchangeTime = new DoorExchangeTime
 						{
-							DeviceId				= Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							Instance				= reader.ReadByte(),
-							FirstPassengerMovement	= Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							LastPassengerMovement	= Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							FirstOpening			= Dlx3Pomocnik.CtiUIntBigEndian(reader),
-							LastClosing				= Dlx3Pomocnik.CtiUIntBigEndian(reader)
+							DeviceId				= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							Instance				= BinaryHelper.ReadByteValue(reader),
+							FirstPassengerMovement	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							LastPassengerMovement	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							FirstOpening			= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							LastClosing				= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN)
 						};
-
-						//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstPassengerMovement).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-						//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstPassengerMovement).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-						//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastPassengerMovement).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-						//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastPassengerMovement).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-						//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstOpening).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-						//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstOpening).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-						//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastClosing).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-						//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastClosing).DateTime))
-						//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
-
+						
 						DoorExchangeTimes.Add(doorExchangeTime);
 					}
 
@@ -185,9 +165,9 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 						{
 							ms.Position = 4; // Vrátíme se na pozici po časovém razítku
 
-							byte doorId				= reader.ReadByte();
-							ushort boardingTime		= Dlx3Pomocnik.CtiUShortBigEndian(reader);
-							ushort alightingTime	= Dlx3Pomocnik.CtiUShortBigEndian(reader);
+							byte doorId				= BinaryHelper.ReadByteValue(reader);
+							ushort boardingTime		= BinaryHelper.ReadUShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+							ushort alightingTime	= BinaryHelper.ReadUShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
 
 							Console.WriteLine($"Informace: Načtena starší verze rPET bloku: DoorId={doorId}, BoardingTime={boardingTime}, AlightingTime={alightingTime}");
 
@@ -201,23 +181,6 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 								FirstOpening			= 0, // Neznáme časy otevření/zavření
 								LastClosing				= 0
 							};
-
-							//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstPassengerMovement).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-							//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstPassengerMovement).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-							//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastPassengerMovement).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-							//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastPassengerMovement).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-							//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstOpening).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-							//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.FirstOpening).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-							//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastClosing).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-							//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(doorExchangeTime.LastClosing).DateTime))
-							//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
 
 							DoorExchangeTimes.Add(doorExchangeTime);
 						}
