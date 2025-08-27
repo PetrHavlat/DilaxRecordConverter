@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
 
 namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 {
@@ -63,12 +64,8 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Čtení časového razítka
-					Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd {DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime}");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd {DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime}");
-
+					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					
 					// Kontrola, zda máme dostatek dat pro typ události (1 bajt)
 					if (ms.Position < ms.Length)
 					{
@@ -98,8 +95,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				EventData = new byte[0];
 			}
 
-			//if (EventType == EventTypes.ScheduledStopReached || EventType == EventTypes.ScheduledStopLeft)
-			//	Console.WriteLine(ToString());
+			
 		}
 
 		/// <summary>
