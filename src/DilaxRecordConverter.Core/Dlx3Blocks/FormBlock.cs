@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DilaxRecordConverter.Core;
+using DilaxRecordConverter.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DilaxRecordConverter.Core;
 
 namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 {
@@ -46,20 +47,16 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					Timestamp = Dlx3Pomocnik.CtiUIntBigEndian(reader);
-					//if (Dlx3Pomocnik.CASY_PRIJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen příjezd");
-					//if (Dlx3Pomocnik.CASY_ODJEZDU.Contains(DateTimeOffset.FromUnixTimeSeconds(Timestamp).DateTime))
-					//	Console.WriteLine($"{GetType().Name} - nalezen odjezd");
-
+					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					
 					// Načítání sekvence vozů
 					while (ms.Position < ms.Length)
 					{
 						var car = new TrainCar
 						{
-							VehicleId = Dlx3Pomocnik.ReadNullTerminatedString(reader),
-							VehicleType = Dlx3Pomocnik.ReadNullTerminatedString(reader),
-							Operator = Dlx3Pomocnik.ReadNullTerminatedString(reader)
+							VehicleId = BinaryHelper.ReadStringValue(reader),
+							VehicleType = BinaryHelper.ReadStringValue(reader),
+							Operator = BinaryHelper.ReadStringValue(reader)
 						};
 
 						Cars.Add(car);
