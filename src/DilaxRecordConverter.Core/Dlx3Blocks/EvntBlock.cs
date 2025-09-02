@@ -27,7 +27,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá dodatečná data události.
 		/// </summary>
-		public byte[] EventData { get; private set; }
+		public byte[]? EventData { get; private set; }
 
 		/// <summary>
 		/// Získá popis typu události.
@@ -64,7 +64,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Čtení časového razítka
-					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Timestamp = BinaryHelper.ReadUIntValue(reader);
 					
 					// Kontrola, zda máme dostatek dat pro typ události (1 bajt)
 					if (ms.Position < ms.Length)
