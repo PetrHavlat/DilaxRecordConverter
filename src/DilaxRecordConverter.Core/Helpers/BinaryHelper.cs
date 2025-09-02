@@ -130,49 +130,49 @@ namespace DilaxRecordConverter.Core.Helpers
 			}
 		}
 
-		public static short ReadShortValue(BinaryReader reader, bool isInBigEndian = false)
+		public static short ReadShortValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(Int16), nameof(Int16), isInBigEndian);
 			return BitConverter.ToInt16(bytes, 0);
 		}
 
-		public static ushort ReadUShortValue(BinaryReader reader, bool isInBigEndian = false)
+		public static ushort ReadUShortValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(UInt16), nameof(UInt16), isInBigEndian);
 			return BitConverter.ToUInt16(bytes, 0);
 		}
 
-		public static int ReadIntValue(BinaryReader reader, bool isInBigEndian = false)
+		public static int ReadIntValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(Int32), nameof(Int32), isInBigEndian);
 			return BitConverter.ToInt32(bytes, 0);
 		}
 
-		public static uint ReadUIntValue(BinaryReader reader, bool isInBigEndian = false)
+		public static uint ReadUIntValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(UInt32), nameof(UInt32), isInBigEndian);
 			return BitConverter.ToUInt32(bytes, 0);
 		}
 
-		public static long ReadLongValue(BinaryReader reader, bool isInBigEndian = false)
+		public static long ReadLongValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(Int64), nameof(Int64), isInBigEndian);
 			return BitConverter.ToInt64(bytes, 0);
 		}
 
-		public static ulong ReadULongValue(BinaryReader reader, bool isInBigEndian = false)
+		public static ulong ReadULongValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(UInt64), nameof(UInt64), isInBigEndian);
 			return BitConverter.ToUInt64(bytes, 0);
 		}
 
-		public static float ReadFloatValue(BinaryReader reader, bool isInBigEndian = false)
+		public static float ReadFloatValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(float), nameof(Single), isInBigEndian);
 			return BitConverter.ToSingle(bytes, 0);
 		}
 
-		public static double ReadDoubleValue(BinaryReader reader, bool isInBigEndian = false)
+		public static double ReadDoubleValue(BinaryReader reader, bool isInBigEndian = true)
 		{
 			var bytes = ReadBinaryData(reader, sizeof(double), nameof(Double), isInBigEndian);
 			return BitConverter.ToDouble(bytes, 0);
