@@ -98,7 +98,7 @@ namespace DilaxRecordConverter.Core
         /// <returns>Popis události.</returns>
         public static string GetEventDescription(byte eventId)
         {
-            if (EventDescriptions.TryGetValue(eventId, out string description))
+            if (EventDescriptions.TryGetValue(eventId, out string? description))
                 return description;
 
             if (eventId >= 12 && eventId <= 99)
