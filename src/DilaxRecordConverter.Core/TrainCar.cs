@@ -8,17 +8,17 @@
         /// <summary>
         /// Získá nebo nastaví identifikátor vozidla.
         /// </summary>
-        public string VehicleId { get; set; }
+        public string? VehicleId { get; set; }
 
         /// <summary>
         /// Získá nebo nastaví typ vozidla.
         /// </summary>
-        public string VehicleType { get; set; }
+        public string? VehicleType { get; set; }
 
         /// <summary>
         /// Získá nebo nastaví název operátora.
         /// </summary>
-        public string Operator { get; set; }
+        public string? Operator { get; set; }
 
         /// <summary>
         /// Vrací řetězcovou reprezentaci vozu.
