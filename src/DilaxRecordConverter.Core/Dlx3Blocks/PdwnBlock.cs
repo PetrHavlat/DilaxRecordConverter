@@ -58,8 +58,8 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					PowerOffTimestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-					PowerOnTimestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					PowerOffTimestamp = BinaryHelper.ReadUIntValue(reader);
+					PowerOnTimestamp = BinaryHelper.ReadUIntValue(reader);
 					
 					// Kontrola, zda jsme přečetli všechna data
 					if (ms.Position < ms.Length)
@@ -70,7 +70,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 						// Například PowerDownReason z původní implementace
 						if (ms.Position < ms.Length)
 						{
-							byte powerDownReason = reader.ReadByte();
+							var powerDownReason = reader.ReadByte();
 							Console.WriteLine($"Informace: Nalezen PowerDownReason: {powerDownReason}");
 						}
 					}
