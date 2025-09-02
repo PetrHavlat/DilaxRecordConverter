@@ -35,7 +35,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá text zprávy.
 		/// </summary>
-		public string Message { get; set; }
+		public string? Message { get; set; }
 
 		/// <summary>
 		/// Získá, zda zpráva obsahuje informace o zařízení (Module ID = 20).
@@ -45,7 +45,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		// Parsované hodnoty pro Module ID 20
 		public uint? DeviceId { get; set; }
 		public byte? DoorInstance { get; set; }
-		public string AdditionalInfo { get; set; }
+		public string? AdditionalInfo { get; set; }
 
 		/// <summary>
 		/// Získá popis diagnostické zprávy.
