@@ -53,12 +53,12 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá zprávu jako řetězec.
 		/// </summary>
-		public string Message { get; private set; }
+		public string? Message { get; private set; }
 
 		/// <summary>
 		/// Získá původní binární data FMS.
 		/// </summary>
-		public byte[] RawFmsData { get; private set; }
+		public byte[]? RawFmsData { get; private set; }
 
 		/// <summary>
 		/// Získá slovník klíč-hodnota pro typy protokolů 1 (CAN-FMS) a 2 (1-Wire-FMS).
@@ -87,10 +87,10 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Timestamp = BinaryHelper.ReadUIntValue(reader);
 
 					// Uložení původních dat pro zpětnou kompatibilitu
-					int dataLen = data.Length - 4;
+					var dataLen = data.Length - 4;
 					if (dataLen > 0)
 					{
 						RawFmsData = new byte[dataLen];
@@ -155,16 +155,16 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				return;
 
 			// Rozdělení zprávy na jednotlivé páry klíč:hodnota
-			string[] pairs = message.Split(',');
+			var pairs = message.Split(',');
 			foreach (string pair in pairs)
 			{
-				string trimmedPair = pair.Trim();
-				int colonIndex = trimmedPair.IndexOf(':');
+				var trimmedPair = pair.Trim();
+				var colonIndex = trimmedPair.IndexOf(':');
 
 				if (colonIndex > 0)
 				{
-					string key = trimmedPair.Substring(0, colonIndex).Trim();
-					string value = trimmedPair.Substring(colonIndex + 1).Trim();
+					var key = trimmedPair.Substring(0, colonIndex).Trim();
+					var value = trimmedPair.Substring(colonIndex + 1).Trim();
 
 					if (!string.IsNullOrEmpty(key))
 					{
@@ -179,12 +179,12 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// </summary>
 		/// <param name="key">Klíč k vyhledání.</param>
 		/// <returns>Hodnota pro zadaný klíč nebo null, pokud klíč neexistuje nebo hodnota je neplatná ('*').</returns>
-		public string GetValue(string key)
+		public string? GetValue(string key)
 		{
 			if ((Type != ProtocolType.CanFms && Type != ProtocolType.OneWireFms) || !KeyValuePairs.ContainsKey(key))
 				return null;
 
-			string value = KeyValuePairs[key];
+			var value = KeyValuePairs[key];
 			return value == "*" ? null : value;
 		}
 
@@ -195,7 +195,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <returns>Hodnota pro zadaný klíč jako double nebo null, pokud klíč neexistuje, hodnota je neplatná nebo není číslo.</returns>
 		public double? GetDoubleValue(string key)
 		{
-			string value = GetValue(key);
+			var value = GetValue(key);
 			if (value == null)
 				return null;
 
@@ -228,7 +228,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá indikátor hladiny paliva.
 		/// </summary>
-		public string FuelLevelIndicator => GetValue("FMS_FUEL_LEVEL");
+		public string? FuelLevelIndicator => GetValue("FMS_FUEL_LEVEL");
 
 		/// <summary>
 		/// Získá rychlost vozidla v km/h.
