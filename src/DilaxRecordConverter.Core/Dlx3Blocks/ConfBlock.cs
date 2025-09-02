@@ -42,7 +42,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					CurrentTime = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					CurrentTime = BinaryHelper.ReadUIntValue(reader);
 					
 					// Načítání opakujících se záznamů dveří
 					while (ms.Position < ms.Length)
@@ -58,7 +58,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 
 							var door = new DoorConfiguration
 							{
-								DeviceId = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+								DeviceId = BinaryHelper.ReadUIntValue(reader),
 								Instance = BinaryHelper.ReadByteValue(reader)
 							};
 
