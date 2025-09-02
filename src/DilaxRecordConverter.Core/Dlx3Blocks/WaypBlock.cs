@@ -1,6 +1,5 @@
 ﻿using DilaxRecordConverter.Core;
 using DilaxRecordConverter.Core.Helpers;
-using DLX3Converter.Pomocnici;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,7 +86,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// Pokud je waypoint pravidelnou zastávkou, je to identifikátor zastávky.
 		/// Pokud tato hodnota není k dispozici, může být prázdná nebo obsahovat "n.a.".
 		/// </summary>
-		public string StopIdentifier { get; private set; }
+		public string? StopIdentifier { get; private set; }
 
 		/// <summary>
 		/// Získá datum a čas odjezdu z předchozího waypointu jako DateTime.
@@ -147,11 +146,11 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					if (data.Length >= 16)
 					{
 						// Pokusíme se nejprve načíst data podle původní implementace
-						uint timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-						int latitude = BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-						int longitude = BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-						short speed = BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-						short course = BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+						var timestamp = BinaryHelper.ReadUIntValue(reader);
+						var latitude = BinaryHelper.ReadIntValue(reader);
+						var longitude = BinaryHelper.ReadIntValue(reader);
+						var speed = BinaryHelper.ReadShortValue(reader);
+						var course = BinaryHelper.ReadShortValue(reader);
 
 						// Uložíme načtená data
 						ArrivalTimestamp = timestamp;
@@ -177,14 +176,14 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					}
 
 					// Načtení dat podle specifikace
-					DepartureTimestamp	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-					ArrivalTimestamp	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					DepartureTimestamp = BinaryHelper.ReadUIntValue(reader);
+					ArrivalTimestamp = BinaryHelper.ReadUIntValue(reader);
 					Type = (WaypointType)BinaryHelper.ReadByteValue(reader);
-					Latitude			= BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-					Longitude			= BinaryHelper.ReadIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-					Satellites			= BinaryHelper.ReadByteValue(reader);
-					TravelledDistance	= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-					Speed				= BinaryHelper.ReadShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Latitude = BinaryHelper.ReadIntValue(reader);
+					Longitude = BinaryHelper.ReadIntValue(reader);
+					Satellites = BinaryHelper.ReadByteValue(reader);
+					TravelledDistance = BinaryHelper.ReadShortValue(reader);
+					Speed = BinaryHelper.ReadShortValue(reader);
 
 					// Načtení identifikátoru zastávky
 					if (ms.Position < ms.Length)
