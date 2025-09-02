@@ -47,7 +47,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Timestamp = BinaryHelper.ReadUIntValue(reader);
 					
 					// Načítání sekvence vozů
 					while (ms.Position < ms.Length)
