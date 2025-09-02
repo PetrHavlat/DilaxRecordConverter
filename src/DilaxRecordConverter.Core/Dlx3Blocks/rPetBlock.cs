@@ -136,19 +136,19 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var reader = new BinaryReader(ms))
 				{
 					// Načtení časového razítka
-					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN); 
+					Timestamp = BinaryHelper.ReadUIntValue(reader); 
 					
 					// Načítání informací o dveřích
 					while (ms.Position + 17 <= ms.Length) // Potřebujeme 17 bajtů pro každé dveře (4+1+4+4+4)
 					{
 						var doorExchangeTime = new DoorExchangeTime
 						{
-							DeviceId				= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
-							Instance				= BinaryHelper.ReadByteValue(reader),
-							FirstPassengerMovement	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
-							LastPassengerMovement	= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
-							FirstOpening			= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
-							LastClosing				= BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN)
+							DeviceId = BinaryHelper.ReadUIntValue(reader),
+							Instance = BinaryHelper.ReadByteValue(reader),
+							FirstPassengerMovement = BinaryHelper.ReadUIntValue(reader),
+							LastPassengerMovement = BinaryHelper.ReadUIntValue(reader),
+							FirstOpening = BinaryHelper.ReadUIntValue(reader),
+							LastClosing	= BinaryHelper.ReadUIntValue(reader)
 						};
 						
 						DoorExchangeTimes.Add(doorExchangeTime);
@@ -165,21 +165,21 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 						{
 							ms.Position = 4; // Vrátíme se na pozici po časovém razítku
 
-							byte doorId				= BinaryHelper.ReadByteValue(reader);
-							ushort boardingTime		= BinaryHelper.ReadUShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
-							ushort alightingTime	= BinaryHelper.ReadUShortValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+							var doorId = BinaryHelper.ReadByteValue(reader);
+							var boardingTime = BinaryHelper.ReadUShortValue(reader);
+							var alightingTime = BinaryHelper.ReadUShortValue(reader);
 
 							Console.WriteLine($"Informace: Načtena starší verze rPET bloku: DoorId={doorId}, BoardingTime={boardingTime}, AlightingTime={alightingTime}");
 
 							// Vytvoříme záznam o dveřích z načtených dat
 							var doorExchangeTime = new DoorExchangeTime
 							{
-								DeviceId				= 0, // Neznáme Device ID
-								Instance				= doorId,
-								FirstPassengerMovement	= boardingTime,
-								LastPassengerMovement	= alightingTime,
-								FirstOpening			= 0, // Neznáme časy otevření/zavření
-								LastClosing				= 0
+								DeviceId = 0, // Neznáme Device ID
+								Instance = doorId,
+								FirstPassengerMovement = boardingTime,
+								LastPassengerMovement = alightingTime,
+								FirstOpening = 0, // Neznáme časy otevření/zavření
+								LastClosing	= 0
 							};
 
 							DoorExchangeTimes.Add(doorExchangeTime);
