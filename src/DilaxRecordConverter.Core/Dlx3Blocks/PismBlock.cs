@@ -63,7 +63,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá zprávu jako řetězec.
 		/// </summary>
-		public string Message { get; private set; }
+		public string? Message { get; private set; }
 
 		/// <summary>
 		/// Získá slovník klíč-hodnota pro typ protokolu 5 (TripData).
@@ -94,7 +94,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				using (var ms = new MemoryStream(data))
 				using (var reader = new BinaryReader(ms))
 				{
-					Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN);
+					Timestamp = BinaryHelper.ReadUIntValue(reader);
 					
 					Type = (ProtocolType)BinaryHelper.ReadByteValue(reader);
 
@@ -145,16 +145,16 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 				return;
 
 			// Rozdělení zprávy na jednotlivé páry klíč:hodnota
-			string[] pairs = message.Split(',');
+			var pairs = message.Split(',');
 			foreach (string pair in pairs)
 			{
-				string trimmedPair = pair.Trim();
-				int colonIndex = trimmedPair.IndexOf(':');
+				var trimmedPair = pair.Trim();
+				var colonIndex = trimmedPair.IndexOf(':');
 
 				if (colonIndex > 0)
 				{
-					string key = trimmedPair.Substring(0, colonIndex).Trim();
-					string value = trimmedPair.Substring(colonIndex + 1).Trim();
+					var key = trimmedPair.Substring(0, colonIndex).Trim();
+					var value = trimmedPair.Substring(colonIndex + 1).Trim();
 
 					if (!string.IsNullOrEmpty(key))
 					{
@@ -171,7 +171,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// </summary>
 		/// <param name="key">Klíč k vyhledání.</param>
 		/// <returns>Hodnota pro zadaný klíč nebo null, pokud klíč neexistuje.</returns>
-		public string GetTripDataValue(string key)
+		public string? GetTripDataValue(string key)
 		{
 			if (Type != ProtocolType.TripData || !TripData.ContainsKey(key))
 				return null;
@@ -184,37 +184,37 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá ID linky z dat o jízdě.
 		/// </summary>
-		public string Line => GetTripDataValue("line");
+		public string? Line => GetTripDataValue("line");
 
 		/// <summary>
 		/// Získá ID trasy z dat o jízdě.
 		/// </summary>
-		public string Route => GetTripDataValue("route");
+		public string? Route => GetTripDataValue("route");
 
 		/// <summary>
 		/// Získá ID jízdy z dat o jízdě.
 		/// </summary>
-		public string Trip => GetTripDataValue("trip");
+		public string? Trip => GetTripDataValue("trip");
 
 		/// <summary>
 		/// Získá název zastávky z dat o jízdě.
 		/// </summary>
-		public string Stop => GetTripDataValue("stop");
+		public string? Stop => GetTripDataValue("stop");
 
 		/// <summary>
 		/// Získá ID zastávky z dat o jízdě.
 		/// </summary>
-		public string StopId => GetTripDataValue("stopid");
+		public string? StopId => GetTripDataValue("stopid");
 
 		/// <summary>
 		/// Získá název další zastávky z dat o jízdě.
 		/// </summary>
-		public string NextStop => GetTripDataValue("nextstop");
+		public string? NextStop => GetTripDataValue("nextstop");
 
 		/// <summary>
 		/// Získá ID další zastávky z dat o jízdě.
 		/// </summary>
-		public string NextStopId => GetTripDataValue("nextstopid");
+		public string? NextStopId => GetTripDataValue("nextstopid");
 
 		/// <summary>
 		/// Získá počet zbývajících zastávek do konce jízdy z dat o jízdě.
@@ -223,7 +223,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		{
 			get
 			{
-				string value = GetTripDataValue("stopsleft");
+				var value = GetTripDataValue("stopsleft");
 				if (int.TryParse(value, out int result))
 					return result;
 				return null;
@@ -233,12 +233,12 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 		/// <summary>
 		/// Získá cíl jízdy z dat o jízdě.
 		/// </summary>
-		public string Destination => GetTripDataValue("destination");
+		public string? Destination => GetTripDataValue("destination");
 
 		/// <summary>
 		/// Získá ID kurzu z dat o jízdě.
 		/// </summary>
-		public string Course => GetTripDataValue("course");
+		public string? Course => GetTripDataValue("course");
 
 		/// <summary>
 		/// Vrací řetězcovou reprezentaci PISM bloku.
