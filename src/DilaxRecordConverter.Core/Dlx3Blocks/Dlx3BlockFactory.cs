@@ -8,7 +8,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 {
 	public static class Dlx3BlockFactory
 	{
-		public static Dictionary<string, Dlx3Block> RegistrovaneBloky { get; private set; } = new Dictionary<string, Dlx3Block>()
+		public static Dictionary<string, Dlx3Block> RegisteredDlx3Blocks { get; private set; } = new Dictionary<string, Dlx3Block>()
 		{
 			{ "FHDR", new FhdrBlock() },
 			{ "FEND", new FendBlock() },
@@ -24,20 +24,21 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 			{ "rPET", new rPetBlock() },
 			{ "WAYP", new WaypBlock() }
 		};
-		private static Dlx3Block VytvorBlok(string blockType)
+
+		private static Dlx3Block CreateBlock(string blockType)
 		{
 			if (String.IsNullOrEmpty(blockType))
 				throw new ArgumentNullException($"Parametr {nameof(blockType)} nesmí mít hodnotu null nebo prazdný řetězec");
 
-			if (!RegistrovaneBloky.ContainsKey(blockType))
+			if (!RegisteredDlx3Blocks.ContainsKey(blockType))
 				throw new ArgumentException($"Pro hodnotu {blockType} není definován žádný blok");
 			
-			return RegistrovaneBloky[blockType];
+			return RegisteredDlx3Blocks[blockType];
 		}
 
-		public static Dlx3Block VytvorBlok(string blockType, ushort length, byte[] data, ushort crc)
+		public static Dlx3Block CreateDlx3Block(string blockType, ushort length, byte[] data, ushort crc)
 		{
-			Dlx3Block blok = VytvorBlok(blockType);
+			Dlx3Block blok = CreateBlock(blockType);
 
 			blok.BlockType	= blockType;
 			blok.Length		= length;
@@ -48,14 +49,14 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 			return blok;
 		}
 
-		public static void PridejBlok(string nazev, Dlx3Block dlx3Blok)
+		public static void AddDlx3Block(string name, Dlx3Block dlx3Blok)
 		{
-			RegistrovaneBloky.Add(nazev, dlx3Blok);
+			RegisteredDlx3Blocks.Add(name, dlx3Blok);
 		}
 
-		public static void OdeberBlok(string nazev)
+		public static void RemoveDlx3Block(string name)
 		{
-			RegistrovaneBloky.Remove(nazev);
+			RegisteredDlx3Blocks.Remove(name);
 		}
 	}
 }
