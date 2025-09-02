@@ -79,7 +79,7 @@ namespace DilaxRecordConverter.Core
         /// <returns>Popis kategorie.</returns>
         public static string GetCategoryDescription(byte category)
         {
-            if (Categories.TryGetValue(category, out string description))
+            if (Categories.TryGetValue(category, out string? description))
                 return description;
 
             return $"Unknown Category ({category})";
@@ -92,7 +92,7 @@ namespace DilaxRecordConverter.Core
         /// <returns>Popis modulu.</returns>
         public static string GetModuleDescription(byte moduleId)
         {
-            if (Modules.TryGetValue(moduleId, out string description))
+            if (Modules.TryGetValue(moduleId, out string? description))
                 return description;
 
             return $"Unknown Module ({moduleId})";
@@ -106,10 +106,10 @@ namespace DilaxRecordConverter.Core
         /// <returns>Popis podmodulu.</returns>
         public static string GetSubModuleDescription(byte moduleId, byte subModuleId)
         {
-            if (moduleId == 11 && SubModules11.TryGetValue(subModuleId, out string description11))
+            if (moduleId == 11 && SubModules11.TryGetValue(subModuleId, out string? description11))
                 return description11;
 
-            if (moduleId == 20 && SubModules20.TryGetValue(subModuleId, out string description20))
+            if (moduleId == 20 && SubModules20.TryGetValue(subModuleId, out string? description20))
                 return description20;
 
             return $"Unknown SubModule ({subModuleId})";
@@ -126,15 +126,15 @@ namespace DilaxRecordConverter.Core
         {
             if (moduleId == 11)
             {
-                if (subModuleId == 0 && Messages11_0.TryGetValue(messageId, out string description11_0))
+                if (subModuleId == 0 && Messages11_0.TryGetValue(messageId, out string? description11_0))
                     return description11_0;
 
-                if (subModuleId == 1 && Messages11_1.TryGetValue(messageId, out string description11_1))
+                if (subModuleId == 1 && Messages11_1.TryGetValue(messageId, out string? description11_1))
                     return description11_1;
             }
             else if (moduleId == 20)
             {
-                if (subModuleId == 0 && Messages20_0.TryGetValue(messageId, out string description20_0))
+                if (subModuleId == 0 && Messages20_0.TryGetValue(messageId, out string? description20_0))
                     return description20_0;
             }
 
