@@ -51,7 +51,7 @@ namespace DLX3Converter.Dlx3Conversion.Dlx3Bloky
 					{
 						var message = new DiagnosticMessage
 						{
-							Timestamp = BinaryHelper.ReadUIntValue(reader, DefaultValues.IS_IN_BIG_ENDIAN),
+							Timestamp = BinaryHelper.ReadUIntValue(reader),
 							ModuleId = BinaryHelper.ReadByteValue(reader),
 							SubModuleId = BinaryHelper.ReadByteValue(reader),
 							MessageId = BinaryHelper.ReadByteValue(reader),
