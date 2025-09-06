@@ -6,9 +6,10 @@ https://www.dilax.com/en
 
 **They are great. I really want to work for them.** 
 
-It reads .raw files and convert them to CSV files. In future to PDF and other formats.
+It reads .raw files and convert them to .csv files. In future to PDF and other formats.
 
-I have localized all error messages in czech languange. In future I will localize it in english, deutsch, polski, français and español.
+Tool is localized in czech languange. In future I will localize it in english, deutsch, polski, français and español.
+I am planning to convert the tool into a library / NuGet package.
 
 **Tool is still under development!**
 
